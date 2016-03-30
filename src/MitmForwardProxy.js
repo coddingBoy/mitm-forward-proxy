@@ -21,7 +21,7 @@ module.exports = class MitmForwardProxy {
         if (!configPath) {
             throw new Error('No configPath');
         }
-        this.configPath = configPath;
+        this.configPath = path.resolve(configPath);
         this.port = port;
         var server = new http.Server();
         server.listen(this.port, () => {
