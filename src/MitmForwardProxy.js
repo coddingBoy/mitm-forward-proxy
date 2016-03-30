@@ -5,6 +5,11 @@ const fs = require('fs');
 const url = require('url');
 const path = require('path');
 const https = require('https');
+const logColor = {
+    FgRed: "\x1b[31m",
+    FgGreen: "\x1b[32m",
+    Reset: "\x1b[0m"
+};
 
 var d = domain.create();
 d.on('error', function (err) {
@@ -20,6 +25,7 @@ module.exports = class MitmForwardProxy {
         this.port = port;
         var server = new http.Server();
         server.listen(this.port, () => {
+            console.log(logColor.FgGreen + '%s' + logColor.Reset, `代理启动端口: ${this.port}`);
             server.on('error', (e) => {
                 console.error(e);
             });
@@ -51,12 +57,13 @@ module.exports = class MitmForwardProxy {
 
             var responseCB = () => {
                 if (forwardObj.forward.local) {
+                    console.log(logColor.FgGreen + '%s' + logColor.Reset, `URL: ${forwardObj.url} 被代理到本地 ${forwardObj.forward.local}`);
                     res.writeHead('200');
                     var rs = new fs.ReadStream(path.resolve(forwardObj.forward.local));
                     rs.pipe(res);
                 } else if (forwardObj.forward.url){
                     var urlObject = url.parse(forwardObj.forward.url);
-                    console.log(urlObject);
+                    console.log(logColor.FgGreen + '%s' + logColor.Reset, `URL: ${forwardObj.url} 被转发到 ${forwardObj.forward.url}`);
                     if (/^http$/i.test(urlObject.protocol)) {
                         var rOptions = {
                             protocol: urlObject.protocol,
@@ -125,7 +132,6 @@ module.exports = class MitmForwardProxy {
         req.pipe(proxyReq);
     }
     proxyRequestHttps (rOptions, req, res) {
-        console.log(rOptions);
         var proxyReq = https.request(rOptions, (proxyRes) => {
             Object.keys(proxyRes.headers).forEach(function(key) {
                 if(proxyRes.headers[key] != undefined){
