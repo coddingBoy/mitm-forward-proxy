@@ -9,9 +9,9 @@ module.exports = [
         }
     },
     {
-        url: 'http://www.baidu.com',
+        url: 'http://www.baidu.com/*',
         forward: {
-            local: path.resolve(__dirname, './test.html'), // higher priority
+            local: path.resolve(__dirname, '../test'), // higher priority
             // url: 'https://www.baidu.com',    // lower priority
             timeout: 0 // 配置延迟，单位秒
         }
