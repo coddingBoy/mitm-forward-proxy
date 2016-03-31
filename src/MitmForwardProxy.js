@@ -6,6 +6,7 @@ const url = require('url');
 const path = require('path');
 const https = require('https');
 const through = require('through2');
+const net = require('net');
 const logColor = {
     FgRed: "\x1b[31m",
     FgGreen: "\x1b[32m",
@@ -40,6 +41,7 @@ module.exports = class MitmForwardProxy {
                 d.run(() => {
                     // connect to an origin server
                     var srvUrl = url.parse(`http://${req.url}`);
+                    console.log(req.url);
                     var srvSocket = net.connect(srvUrl.port, srvUrl.hostname, () => {
                         cltSocket.write('HTTP/1.1 200 Connection Established\r\n' +
                         'Proxy-agent: SpyProxy\r\n' +
@@ -110,7 +112,7 @@ module.exports = class MitmForwardProxy {
         var urlObject = url.parse(req.url);
         var rOptions = {
             protocol: urlObject.protocol,
-            host: req.headers['host'],
+            hostname: urlObject.hostname,
             method: req.method,
             port: urlObject.port || 80,
             path: urlObject.path,
