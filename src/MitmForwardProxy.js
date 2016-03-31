@@ -53,10 +53,7 @@ module.exports = class MitmForwardProxy {
     }
     forwardHttp (req, res) {
         var forwardObj = utils.getMatchUrlFromConfig(this.configPath, req.url);
-
-
         if (forwardObj && forwardObj.type && forwardObj.data) {
-
             var responseCB = () => {
                 if (forwardObj.type === utils.UrlType.local) {
                     console.log(logColor.FgGreen + '%s' + logColor.Reset, `URL: ${req.url} 被代理到本地 ${forwardObj.data}，设置延迟：${forwardObj.timeout?forwardObj.timeout:0}毫秒`);
@@ -66,16 +63,7 @@ module.exports = class MitmForwardProxy {
                 } else if (forwardObj.type === utils.UrlType.url){
                     var urlObject = url.parse(forwardObj.data);
                     console.log(logColor.FgGreen + '%s' + logColor.Reset, `URL: ${req.url} 被转发到 ${forwardObj.data}，设置延迟：${forwardObj.timeout?forwardObj.timeout:0}毫秒`);
-                    if (/^http$/i.test(urlObject.protocol)) {
-                        var rOptions = {
-                            protocol: urlObject.protocol,
-                            hostname: urlObject.hostname,
-                            method: urlObject.method,
-                            port: urlObject.port || 80,
-                            path: urlObject.path
-                        }
-                        this.proxyRequestHttp(rOptions, req, res);
-                    } else {
+                    if (/^https/i.test(urlObject.protocol)) {
                         var rOptions = {
                             protocol: urlObject.protocol,
                             hostname: urlObject.hostname,
@@ -84,6 +72,15 @@ module.exports = class MitmForwardProxy {
                             path: urlObject.path
                         }
                         this.proxyRequestHttps(rOptions, req, res);
+                    } else {
+                        var rOptions = {
+                            protocol: urlObject.protocol,
+                            hostname: urlObject.hostname,
+                            method: urlObject.method,
+                            port: urlObject.port || 80,
+                            path: urlObject.path
+                        }
+                        this.proxyRequestHttp(rOptions, req, res);
                     }
                 } else {
                     this.ignoreHttpRequest(req, res);

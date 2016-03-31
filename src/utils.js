@@ -34,14 +34,12 @@ exports.getMatchUrlFromConfig = function getMatchUrlFromConfig (configPath, reqU
     }
 
     var mostMatch = _.maxBy(mappingUrls, u => u.condition.url.length);
-    console.log(mostMatch);
 
     var mostMatchForward = mostMatch.condition.forward;
     var mostMatchUrl = mostMatch.condition.url;
     var mostMatchRegExp = mostMatch.regexp;
     if (mostMatchForward.local) {
         var newLocal = mostMatchForward.local +'/'+ reqUrl.replace(mostMatchUrl.replace('*', ''), '');
-        console.log(newLocal);
         return {
             type: UrlType.local,
             data: newLocal,
