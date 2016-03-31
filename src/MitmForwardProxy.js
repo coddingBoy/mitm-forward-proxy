@@ -41,7 +41,7 @@ module.exports = class MitmForwardProxy {
                 d.run(() => {
                     // connect to an origin server
                     var srvUrl = url.parse(`http://${req.url}`);
-                    console.log(req.url);
+                    // console.log(req.url);
                     var srvSocket = net.connect(srvUrl.port, srvUrl.hostname, () => {
                         cltSocket.write('HTTP/1.1 200 Connection Established\r\n' +
                         'Proxy-agent: SpyProxy\r\n' +
