@@ -9,10 +9,10 @@ module.exports = [
         }
     },
     {
-        url: 'http://pa-milishop.com/elis.wealth.product.queryProductList.wealth2',
+        url: 'http://www.baidu.com',
         forward: {
             // local: path.resolve(__dirname, '../test'), // higher priority
-            url: 'https://test1-elis-pa18-smp.pingan.com.cn:8442/life_insurance/elis.wealth.product.queryProductList.wealth2',    // lower priority
+            url: 'http://www.163.com',    // lower priority
             timeout: 0 // 配置延迟，单位秒
         }
     }

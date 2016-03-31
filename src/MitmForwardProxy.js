@@ -5,6 +5,7 @@ const fs = require('fs');
 const url = require('url');
 const path = require('path');
 const https = require('https');
+const through = require('through2');
 const logColor = {
     FgRed: "\x1b[31m",
     FgGreen: "\x1b[32m",
@@ -63,22 +64,28 @@ module.exports = class MitmForwardProxy {
                 } else if (forwardObj.type === utils.UrlType.url){
                     var urlObject = url.parse(forwardObj.data);
                     console.log(logColor.FgGreen + '%s' + logColor.Reset, `URL: ${req.url} 被转发到 ${forwardObj.data}，设置延迟：${forwardObj.timeout?forwardObj.timeout:0}毫秒`);
+
+                    req.headers['host'] = urlObject.hostname;
+                    // req.headers['origin'] = urlObject.hostname;
+
                     if (/^https/i.test(urlObject.protocol)) {
                         var rOptions = {
                             protocol: urlObject.protocol,
                             hostname: urlObject.hostname,
-                            method: urlObject.method,
+                            method: req.method,
                             port: urlObject.port || 443,
-                            path: urlObject.path
+                            path: urlObject.path,
+                            headers: req.headers
                         }
                         this.proxyRequestHttps(rOptions, req, res);
                     } else {
                         var rOptions = {
                             protocol: urlObject.protocol,
                             hostname: urlObject.hostname,
-                            method: urlObject.method,
+                            method: req.method,
                             port: urlObject.port || 80,
-                            path: urlObject.path
+                            path: urlObject.path,
+                            headers: req.headers
                         }
                         this.proxyRequestHttp(rOptions, req, res);
                     }
@@ -106,7 +113,8 @@ module.exports = class MitmForwardProxy {
             host: req.headers['host'],
             method: req.method,
             port: urlObject.port || 80,
-            path: urlObject.path
+            path: urlObject.path,
+            headers: req.headers
         }
         this.proxyRequestHttp (rOptions, req, res);
     }
