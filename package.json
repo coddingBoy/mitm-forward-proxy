@@ -1,6 +1,6 @@
 {
   "name": "mitm-forward-proxy",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "simple forword proxy for Dev",
   "main": "lib/index.js",
   "scripts": {

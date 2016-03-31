@@ -39,14 +39,18 @@ exports.getMatchUrlFromConfig = function getMatchUrlFromConfig (configPath, reqU
     var mostMatchUrl = mostMatch.condition.url;
     var mostMatchRegExp = mostMatch.regexp;
     if (mostMatchForward.local) {
-        var newLocal = mostMatchForward.local +'/'+ reqUrl.replace(mostMatchUrl.replace('*', ''), '');
+        var sufLocal = reqUrl.replace(mostMatchUrl.replace('*', ''), '');
+        sufLocal = sufLocal ? '/' + sufLocal : sufLocal;
+        var newLocal = mostMatchForward.local + sufLocal;
         return {
             type: UrlType.local,
             data: newLocal,
             timeout: mostMatchForward.timeout
         }
     } else if (mostMatchForward.url) {
-        var newUrl =  mostMatchForward.url +'/'+ reqUrl.replace(mostMatchUrl.replace('*', ''), '');
+        var sufUrl = reqUrl.replace(mostMatchUrl.replace('*', ''), '');
+        sufUrl = sufUrl ? '/' + sufUrl : sufUrl;
+        var newUrl =  mostMatchForward.url + sufUrl;
         return {
             type: UrlType.url,
             data: newUrl,
